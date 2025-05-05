@@ -1,56 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>index</title>
-	<style>
-		/* Basic styles for readability */
-		body {
-			font-family: sans-serif;
-			max-width: 800px;
-			margin: 2em auto;
-			padding: 0 1em;
-			line-height: 1.6;
-		}
-		img { max-width: 100%; height: auto; }
-		pre { background-color: #f4f4f4; padding: 1em; overflow-x: auto; }
-		code { font-family: monospace; }
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    <style>
+        /* Basic styles for readability */
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 2em auto;
+            padding: 0 1em;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            margin: 0;
+        }
+        img { max-width: 100%; height: auto; }
+        pre { background-color: #f4f4f4; padding: 1em; overflow-x: auto; }
+        code { font-family: monospace; }
+
+        /* Styles für die p5.js Zeichenfläche und das kleine Video */
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #sketch {
+            /* Hier kannst du spezifische Styles für den Canvas hinzufügen, falls nötig */
+        }
+        .video-container {
+            margin-top: 10px; /* Kleinerer Abstand zum Canvas */
+        }
+        video {
+            width: 200px; /* Kleinere Breite des Videos */
+            height: auto; /* Höhe proportional zur Breite */
+        }
+    </style>
 </head>
 <body>
-	<!--
-You can add style tags and also script:src tags into markdown
-if you use https://marketplace.cursorapi.com/items?itemName=fmoronzirfas.markdown-to-html
-It will be included into your html file
-Just make sure to keep a line break between the markdown tags and the style/script tags
--->
-<style>
-html,
-body {
-height: 100%;
-}
-
-body {
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-}
-main {
-height: 100%;
-display: flex;
-justify-content: center;
-flex-direction: column;
-align-items: flex-end;
-}
-</style>
-<h1>hello world</h1>
+    <h1>Strauch Wind Bewegungs</h1>
 <main>
-<div id="sketch"></div>
-<script src="lib/p5.min.js"></script>
-<script src="index.js"></script>
-</main>
-
+    <div id="sketch"></div>
+    <div class="video-container">
+        <video controls>
+            <source src="IMG_6041(1).MP4" type="video/mp4">
+            Dein Browser unterstützt das Video-Tag nicht.
+        </video>
+    </div>
+    </main>
+    <script src="lib/p5.min.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
