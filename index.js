@@ -1,11 +1,13 @@
+// index.js
+
 let branches = [];
 
 function setup() {
-  createCanvas(300, 300);
+  let canvas = createCanvas(600, 400);
+  canvas.parent('canvas-container');
   angleMode(DEGREES);
   noFill();
 
-  // viele unabhängige Äste zufällig verteilt
   for (let i = 0; i < 20; i++) {
     let start = createVector(random(width), random(height));
     let dir = p5.Vector.fromAngle(random(-PI / 2, PI / 2));
@@ -15,10 +17,9 @@ function setup() {
 
 function draw() {
   background(255);
-
   let t = frameCount * 0.01;
   let windStrength = map(noise(t), 0, 1, -0.4, 0.4);
-  windStrength += sin(t * 2.3) * 0.6; // Windböe
+  windStrength += sin(t * 2.3) * 0.6;
   let wind = createVector(windStrength, 0);
 
   for (let b of branches) {
@@ -44,7 +45,7 @@ class Branch {
 
     this.children = [];
     if (depth < 4) {
-      let splits = floor(random(1, 3)); // 1–2 Verzweigungen
+      let splits = floor(random(1, 3));
       for (let i = 0; i < splits; i++) {
         let newDir = dir.copy().rotate(random(-30, 30));
         let newLen = length * random(0.6, 0.8);
@@ -108,3 +109,64 @@ class LeafNode {
     line(this.pos.x, this.pos.y, this.pos.x + dir.x, this.pos.y + dir.y);
   }
 }
+
+// sketch2.js
+let strauchSketch = function(p) {
+  let branches = [];
+  let windTime = 0;
+  
+  p.setup = function() {
+    let canvas = p.createCanvas(600, 400);
+    canvas.parent('sketch2');
+    
+    // Mehr Ausgangspunkte über die gesamte Breite
+    for(let x = 50; x < p.width; x += 30) {
+      createBranch(x, p.height, -90, p.random(30, 50));
+    }
+  }
+  
+  function createBranch(x, y, angle, length) {
+    if(length < 8) return; // Kleinere Endverzweigungen
+    
+    let branch = {
+      start: p.createVector(x, y),
+      angle: angle + p.random(-15, 15),
+      length: length,
+      thickness: p.map(length, 50, 8, 2, 0.3)
+    };
+    
+    branches.push(branch);
+    
+    // Mehr Verzweigungen für dichteres Aussehen
+    let branchCount = p.floor(p.random(2, 5));
+    for(let i = 0; i < branchCount; i++) {
+      let newX = x + p.cos(p.radians(branch.angle)) * length;
+      let newY = y + p.sin(p.radians(branch.angle)) * length;
+      let newAngle = branch.angle + p.random(-40, 40);
+      createBranch(newX, newY, newAngle, length * p.random(0.6, 0.85));
+    }
+  }
+  
+  p.draw = function() {
+    p.background(255);
+    windTime += 0.005; // Langsamere Windänderung
+    
+    branches.forEach(branch => {
+      // Komplexere Windsimulation
+      let baseWind = p.noise(windTime + branch.start.y * 0.02) * 15;
+      let gustEffect = p.sin(windTime * 2) * p.noise(windTime * 3) * 10;
+      let heightEffect = p.map(branch.start.y, p.height, 0, 0.2, 1.2);
+      
+      let windAngle = branch.angle + (baseWind + gustEffect) * heightEffect;
+      
+      let endX = branch.start.x + p.cos(p.radians(windAngle)) * branch.length;
+      let endY = branch.start.y + p.sin(p.radians(windAngle)) * branch.length;
+      
+      p.stroke(0);
+      p.strokeWeight(branch.thickness);
+      p.line(branch.start.x, branch.start.y, endX, endY);
+    });
+  }
+}
+
+new p5(strauchSketch);
